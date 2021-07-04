@@ -1,14 +1,17 @@
+require('dotenv').config();
 const { response } = require("express");
 const express = require("express");
 const mongodb = require("mongodb");
-const dotenv = require("dotenv");
+
 
 const port = process.env.PORT || 9090;
-//const DBURL =  process.env.data_base_url;
 
-//const DBURL =  "mongodb+srv://rajasekar:hcvlugwj@cluster0.z4sd0.mongodb.net/menter-student?retryWrites=true&w=majority";
+const DBURL =  process.env.DB_URL;
 
-const DBURL = "mongodb://127.0.0.1:27017";
+console.log(DBURL);
+//const DBURL =  "mongodb+srv://raja:GI2ZD5XbjZLFAk9y@cluster0.bxjct.mongodb.net/mentorStudent?retryWrites=true&w=majority";
+
+//const DBURL = "mongodb://127.0.0.1:27017";
 
 const mongoClient = mongodb.MongoClient;
 const objectId = mongodb.ObjectID;
