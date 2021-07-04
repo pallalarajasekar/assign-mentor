@@ -35,6 +35,20 @@ app.post("/insert-student", async (req, res) => {
   }
 });
 
+app.get("/", async (req, res) => {
+  try {
+    const client = await mongoClient.connect(DBURL);
+    const db = client.db("mentorStudent");
+    const doc = await db.collection("student").find().toArray();
+    res.status(200).send(doc);
+    client.close();
+
+  } catch (error) {
+    console.error(error);
+    res.sendStatus(500);
+  }
+});
+
 //find the student data list
 app.get("/find-student", async (req, res) => {
   try {
