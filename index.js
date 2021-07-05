@@ -6,7 +6,7 @@ const mongodb = require("mongodb");
 
 const port = process.env.PORT || 9090;
 
-const DBURL =  process.env.MONGO_URI;
+const DBURL =  process.env.MONGO_URI || "mongodb://127.0.0.1:27017";
 
 
 //const DBURL =  "mongodb+srv://raja:GI2ZD5XbjZLFAk9y@cluster0.bxjct.mongodb.net/mentorStudent?retryWrites=true&w=majority";
@@ -198,9 +198,10 @@ app.put("/assign-student/:id", async(req, res) => {
     console.log("multiple student assign" +req.body.subject);
     const client = await mongoClient.connect(DBURL);
     const db = client.db("mentorStudent");
-    const doc = await db.collection("student").find( {$or:[{trainingSubject: req.body.subject},{firstname:req.body.firstname}]}, { projection: {_id:0, firstname:1, contact:1, email:1 } } ).toArray();
+    const doc = await db.collection("student").find( {$or:[{trainingSubject: req.body.trainingSubject},{firstname:req.body.firstname}]}, { projection: {_id:0, firstname:1, contact:1, email:1 } } ).toArray();
     console.log(doc);
     if (doc.length != 0) {
+      //console.log(doc)
       const doc1 = await db.collection("mentor").updateMany({ _id: objectId(req.params.id) }, { $set: { student: doc } }, {
         upsert: false,
         multi: true
@@ -208,6 +209,7 @@ app.put("/assign-student/:id", async(req, res) => {
       res.status(200).json({ "message": "Assign a multiple student to Mentor"})
       client.close();
     }else{
+      console.log(doc)
       res.status(200).json({ "message": "student name is not avaliable"})
       client.close();
     }
